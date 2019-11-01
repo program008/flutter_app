@@ -28,6 +28,7 @@ dependencies:
   shared_preferences: ^0.5.4
   transparent_image: ^1.0.0
   cached_network_image: ^1.1.2+1
+  web_socket_channel: ^1.1.0
 
 dev_dependencies:
   flutter_test:
