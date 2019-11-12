@@ -19,7 +19,28 @@ class RandomWords extends StatefulWidget {
   RandomWordsState createState() => RandomWordsState();
 }
 
-class RandomWordsState extends State<RandomWords> {
+class RandomWordsState extends State<RandomWords> with WidgetsBindingObserver{
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);//注册监听
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);//移除监听
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    if(state == AppLifecycleState.resumed){
+      // todo
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
