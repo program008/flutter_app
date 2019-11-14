@@ -26,6 +26,15 @@ class RandomWordsState extends State<RandomWords> with WidgetsBindingObserver{
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this);//注册监听
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      print(" 单次 Frame 绘制回调 ");// 只回调一次
+    });
+
+    WidgetsBinding.instance.addPersistentFrameCallback((_){
+      print(" 实时 Frame 绘制回调 ");// 每帧都回调
+    });
+
   }
 
   @override
