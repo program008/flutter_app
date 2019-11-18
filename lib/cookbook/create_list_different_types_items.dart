@@ -36,10 +36,14 @@ class MyApp extends StatelessWidget {
             final item = items[index];
 
             if (item is HeadingItem) {
-              return ListTile(
-                title: Text(
-                  item.heading,
-                  style: Theme.of(context).textTheme.headline,
+              return Container(
+                color: Theme.of(context).primaryColor,
+                height: 50,
+                child: Center(
+                  child: Text(
+                    item.heading,
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
                 ),
               );
             } else if (item is MessageItem) {
