@@ -65,7 +65,10 @@ class _MyCustomFormState extends State<MyCustomForm> {
       floatingActionButton: FloatingActionButton(
         // When the button is pressed,
         // give focus to the text field using myFocusNode.
-        onPressed: () => FocusScope.of(context).requestFocus(myFocusNode),
+        onPressed: () {
+          FocusScope.of(context).requestFocus(myFocusNode);
+          //Scaffold.of(context).showSnackBar(SnackBar(content: Text("focus")));
+        },
         tooltip: 'Focus Second Text Field',
         child: Icon(Icons.edit),
       ), // This trailing comma makes auto-formatting nicer for build methods.

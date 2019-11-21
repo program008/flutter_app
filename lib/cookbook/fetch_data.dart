@@ -69,7 +69,12 @@ class _MyAppState extends State<MyApp> {
             future: post,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.title);
+                return ListTile(
+                  leading: Text("${snapshot.data.id}"),
+                  title: Text(snapshot.data.title,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                  subtitle: Text(snapshot.data.body),
+                  trailing: Icon(Icons.send,color: Theme.of(context).primaryColor,),
+                );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
