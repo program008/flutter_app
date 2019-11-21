@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         body: CustomScrollView(
           slivers: <Widget>[
             const SliverAppBar(
-              pinned: true,
+              pinned: true,//滑动到顶部时，显示title bar
               expandedHeight: 250.0,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text('Demo'),
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
                 maxCrossAxisExtent: 200.0,
                 mainAxisSpacing: 10.0,
                 crossAxisSpacing: 10.0,
-                childAspectRatio: 4.0,
+                childAspectRatio: 4,
               ),
               delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
                     child: Text('List Item $index'),
                   );
                 },
+                childCount: 50,
               ),
             ),
           ],

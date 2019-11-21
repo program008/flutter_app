@@ -20,12 +20,15 @@ class MyApp extends StatelessWidget {
             // Add the app bar to the CustomScrollView.
             SliverAppBar(
               // Provide a standard title.
-              title: Text(title),
+              //title: Text(title),
               // Allows the user to reveal the app bar if they begin scrolling
               // back up the list of items.
               floating: true,
+              pinned: true,
               // Display a placeholder widget to visualize the shrinking size.
-              flexibleSpace: Image.network('https://picsum.photos/250?image=9',),
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text('Demo'),
+              ),
               // Make the initial height of the SliverAppBar larger than normal.
               expandedHeight: 200,
             ),
