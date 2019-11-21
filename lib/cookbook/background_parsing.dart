@@ -38,6 +38,13 @@ class Photo {
       thumbnailUrl: json['thumbnailUrl'] as String,
     );
   }
+
+  @override
+  String toString() {
+    return 'Photo{albumId: $albumId, id: $id, title: $title, url: $url, thumbnailUrl: $thumbnailUrl}';
+  }
+
+
 }
 
 void main() => runApp(MyApp());
@@ -88,11 +95,13 @@ class PhotosList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
       ),
       itemCount: photos.length,
       itemBuilder: (context, index) {
-        return Image.network(photos[index].thumbnailUrl);
+        return Image.network(photos[index].thumbnailUrl,width: 100,height: 100,);
       },
     );
   }

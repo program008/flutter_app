@@ -124,7 +124,13 @@ class Dog {
       'age': age,
     };
   }
-
+  factory Dog.fromJson(Map<String,dynamic> parsedJson){
+    return Dog(
+      id: parsedJson['id'],
+      name: parsedJson['name'],
+      age: parsedJson['age']
+    );
+  }
   // Implement toString to make it easier to see information about
   // each dog when using the print statement.
   @override

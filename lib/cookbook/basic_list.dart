@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.add_shopping_cart),
               title: Text('Phone'),
+              trailing: Icon(Icons.add),
+              subtitle: Text("subtitle"),
             ),
           ],
         ),

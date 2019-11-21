@@ -37,6 +37,7 @@ class _AnimatedContainerAppState extends State<AnimatedContainerApp> {
             duration: Duration(seconds: 1),
             // Provide an optional curve to make the animation feel smoother.
             curve: Curves.fastOutSlowIn,
+            child: Center(child: Text("animal",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),),
           ),
         ),
         floatingActionButton: FloatingActionButton(
