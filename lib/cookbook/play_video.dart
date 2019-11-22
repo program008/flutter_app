@@ -91,6 +91,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               _controller.play();
             }
           });
+          _controller.position.then((value){
+            print("video positon $value");
+          });
         },
         // Display the correct icon depending on the state of the player.
         child: Icon(

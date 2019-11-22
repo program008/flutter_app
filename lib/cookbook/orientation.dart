@@ -36,9 +36,17 @@ class OrientationList extends StatelessWidget {
             // Generate 100 widgets that display their index in the List.
             children: List.generate(100, (index) {
               return Center(
-                child: Text(
-                  'Item $index',
-                  style: Theme.of(context).textTheme.headline,
+                child: Container(
+                  width: orientation == Orientation.portrait?150:100,
+                  height: orientation == Orientation.portrait?150:100,
+                  decoration:
+                      BoxDecoration(color: Theme.of(context).primaryColor),
+                  child: Center(
+                    child: Text(
+                      'Item $index',
+                      style: Theme.of(context).accentTextTheme.title,
+                    ),
+                  ),
                 ),
               );
             }),

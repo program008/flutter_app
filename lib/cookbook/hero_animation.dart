@@ -27,9 +27,7 @@ class MainScreen extends StatelessWidget {
           ),
         ),
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return DetailScreen();
-          }));
+          Navigator.push(context, MaterialPageRoute(builder: (_) {return DetailScreen();}));
         },
       ),
     );
@@ -45,7 +43,7 @@ class DetailScreen extends StatelessWidget {
           child: Hero(
             tag: 'imageHero',
             child: Image.network(
-              'https://picsum.photos/250?image=9',
+              'https://picsum.photos/250?image=2',
             ),
           ),
         ),

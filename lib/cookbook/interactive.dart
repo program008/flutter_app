@@ -219,3 +219,13 @@ class MyApp extends StatelessWidget {
 }
 
 void main() => runApp(MyApp());
+
+/// CHOOSE PRINCIPLES
+/// How do you decide which approach to use? The following principles should help you decide:
+//
+// If the state in question is user data, for example the checked or unchecked mode of a checkbox,
+// or the position of a slider, then the state is best managed by the parent widget.
+//
+//If the state in question is aesthetic, for example an animation, then the state is best managed by the widget itself.
+//
+//If in doubt, start by managing state in the parent widget.
