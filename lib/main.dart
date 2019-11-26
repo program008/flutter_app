@@ -1,4 +1,3 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -9,80 +8,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Startup Name Generator',
-        home: RandomWords(),
+        home: MyWidget(),
     );
   }
 }
 
-class RandomWords extends StatefulWidget {
-  @override
-  RandomWordsState createState() => RandomWordsState();
-}
-
-class RandomWordsState extends State<RandomWords> with WidgetsBindingObserver{
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);//注册监听
-
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      print(" 单次 Frame 绘制回调 ");// 只回调一次
-    });
-
-    WidgetsBinding.instance.addPersistentFrameCallback((_){
-      print(" 实时 Frame 绘制回调 ");// 每帧都回调
-    });
-
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    WidgetsBinding.instance.removeObserver(this);//移除监听
-  }
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state);
-    if(state == AppLifecycleState.resumed){
-      // todo
-    }
-  }
+class MyWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Startup Name Generator'),
+      appBar: AppBar(title: Text("玩Android Q"),),
+      body: Center(
+        child: Text("项目开始前"),
       ),
-      body: _buildSuggestions(),
     );
   }
-}
 
-Widget _buildSuggestions() {
-  final _suggestions = <WordPair>[];
-  return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemBuilder: /*1*/ (context, i) {
-        if (i.isOdd) return Divider(); /*2*/
-
-        final index = i ~/ 2; /*3*/
-        if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10)); /*4*/
-        }
-        return _buildRow(_suggestions[index]);
-      });
-}
-
-Widget _buildRow(WordPair pair) {
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-  return ListTile(
-    title: Text(
-      pair.asPascalCase,
-      style: _biggerFont,
-    ),
-  );
 }
 
