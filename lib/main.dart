@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aboutwe.dart';
 import 'package:flutter_app/home/home.dart';
 import 'package:flutter_app/knowledge/knowledge.dart';
 import 'package:flutter_app/navigation/navigation.dart';
@@ -230,6 +231,9 @@ class LeftDrawer extends StatelessWidget {
             title: Text("关于我们"),
             onTap: () {
               Navigator.pop(context);
+              Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                return AboutWeWidget();
+              }));
             },
           ),
         ],
