@@ -19,7 +19,9 @@ class _NavigationState extends State<NavigationWidget> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Center(
-          child: NaviPage(buildContext: context,),
+          child: NaviPage(
+            buildContext: context,
+          ),
         ),
       ),
     );
@@ -28,7 +30,9 @@ class _NavigationState extends State<NavigationWidget> {
 
 class NaviPage extends StatefulWidget {
   BuildContext buildContext;
+
   NaviPage({this.buildContext});
+
   @override
   State<StatefulWidget> createState() {
     return _NaviPageState();
@@ -66,36 +70,40 @@ class _NaviPageState extends State<NaviPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Expanded(
-          flex: 2,
-          child: Container(
-            color: YColors.color_fff,
-            child: ListView.builder(
-              itemCount: _datas.length,
-              itemBuilder: (BuildContext context, int position) {
-                return getRow(position);
-              },
-            ),
-          ),
-        ),
-        Expanded(
-            flex: 5,
-            child: ListView(
-              children: <Widget>[
-                Container(
-                  //height: double.infinity,
-                  alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.all(10),
-                  color: YColors.color_F9F9F9,
-                  child: getChip(buildContext: widget.buildContext,i: index), //传入一级分类下标
+    return _datas.length != 0
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Container(
+                  color: YColors.color_fff,
+                  child: ListView.builder(
+                    itemCount: _datas.length,
+                    itemBuilder: (BuildContext context, int position) {
+                      return getRow(position);
+                    },
+                  ),
                 ),
-              ],
-            )),
-      ],
-    );
+              ),
+              Expanded(
+                  flex: 5,
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        //height: double.infinity,
+                        alignment: Alignment.topLeft,
+                        padding: const EdgeInsets.all(10),
+                        color: YColors.color_F9F9F9,
+                        child: getChip(
+                            buildContext: widget.buildContext,
+                            i: index), //传入一级分类下标
+                      ),
+                    ],
+                  )),
+            ],
+          )
+        : Center(child: CircularProgressIndicator());
   }
 
   Widget getRow(int i) {
@@ -132,7 +140,7 @@ class _NaviPageState extends State<NaviPage> {
     );
   }
 
-  Widget getChip({BuildContext buildContext,int i}) {
+  Widget getChip({BuildContext buildContext, int i}) {
     //更新对应下标数据
     _updateArticles(i);
     return Wrap(
