@@ -4,6 +4,7 @@ import 'package:flutter_app/home/home.dart';
 import 'package:flutter_app/knowledge/knowledge.dart';
 import 'package:flutter_app/navigation/navigation.dart';
 import 'package:flutter_app/project/project.dart';
+import 'package:flutter_app/search/search.dart';
 import 'package:flutter_app/utils.dart';
 
 void main() => runApp(MyApp());
@@ -59,6 +60,9 @@ class _MyWidgetSate extends State<MyWidget>
             icon: Icon(Icons.search),
             onPressed: () {
               print("search");
+              Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                return SearchWidget();
+              }));
             },
           )
         ],
