@@ -6,8 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/webview/browser.dart';
 import 'package:flutter_banner_swiper/flutter_banner_swiper.dart';
+import '../entity_factory.dart';
 import 'adpicture.dart';
-import 'package:flutter_app/home/article_list.dart' as article;
+import 'article_list_entity.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _HomeState extends State<HomeWidget> {
       });
     });
 
-    loadArticles(0).then((List<article.DatasBean> articles) {
+    loadArticles(0).then((List<ArticleListDataData> articles) {
       print(articles);
     });
   }
@@ -86,7 +87,7 @@ class _HomeState extends State<HomeWidget> {
         home: Scaffold(
             body: ListView(padding: EdgeInsets.zero, children: <Widget>[
           Container(width: 450, height: 250, child: bannerWidget),
-          FutureBuilder<List<article.DatasBean>>(
+          FutureBuilder<List<ArticleListDataData>>(
             future: loadArticles(0),
             builder: (_, snapshot) {
               return snapshot.hasData
@@ -110,11 +111,11 @@ Future<List<BannerData>> loadAdPictures() async {
 
 ///
 /// 加载文章列表数据
-Future<List<article.DatasBean>> loadArticles(int pageSize) async {
+Future<List<ArticleListDataData>> loadArticles(int pageSize) async {
   Dio dio = Dio();
   Response<String> response =
       await dio.get("https://www.wanandroid.com/article/list/$pageSize/json");
-  var articleList = article.ArticleList.fromMap(jsonDecode(response.data));
+  var articleList = EntityFactory.generateOBJ<ArticleListEntity>(jsonDecode(response.data));
   if (articleList.errorCode == 0) {
     return articleList.data.datas;
   }
@@ -122,7 +123,7 @@ Future<List<article.DatasBean>> loadArticles(int pageSize) async {
 }
 
 class ArticleItem extends StatelessWidget {
-  List<article.DatasBean> articles;
+  List<ArticleListDataData> articles;
   BuildContext buildContext;
   ArticleItem({Key key, this.buildContext,@required this.articles}) : super(key: key);
 
