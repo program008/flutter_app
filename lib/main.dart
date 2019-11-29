@@ -7,6 +7,8 @@ import 'package:flutter_app/project/project.dart';
 import 'package:flutter_app/search/search.dart';
 import 'package:flutter_app/utils.dart';
 
+import 'login/login.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -222,6 +224,9 @@ class LeftDrawer extends StatelessWidget {
                   ),
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                      return Login();
+                    }));
                   },
                 )
               ],

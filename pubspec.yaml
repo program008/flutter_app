@@ -28,6 +28,7 @@ dependencies:
   flutter_banner_swiper: ^0.1.4
   webview_flutter: 0.3.16
   package_info: 0.4.0+11
+  flutter_spinkit: ^4.0.0
 
 dev_dependencies:
   flutter_test:

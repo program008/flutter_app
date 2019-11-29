@@ -1,6 +1,7 @@
 import 'package:flutter_app/home/article_list_entity.dart';
 import 'package:flutter_app/knowledge/kd_detail_entity.dart';
 import 'package:flutter_app/knowledge/kd_list_entity.dart';
+import 'package:flutter_app/login/login_info_entity.dart';
 import 'package:flutter_app/navigation/navigation_list_entity.dart';
 import 'package:flutter_app/project/project_list_entity.dart';
 import 'package:flutter_app/project/project_title_list_entity.dart';
@@ -17,6 +18,8 @@ class EntityFactory {
       return KdDetailEntity.fromJson(json) as T;
     } else if (T.toString() == "KdListEntity") {
       return KdListEntity.fromJson(json) as T;
+    } else if (T.toString() == "LoginInfoEntity") {
+      return LoginInfoEntity.fromJson(json) as T;
     } else if (T.toString() == "NavigationListEntity") {
       return NavigationListEntity.fromJson(json) as T;
     } else if (T.toString() == "ProjectListEntity") {
