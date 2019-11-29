@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../entity_factory.dart';
 import 'kd_list_entity.dart';
+import 'knowledge_detail.dart';
 
 class KnowledgeWidget extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _KnowledgeState extends State<KnowledgeWidget> {
             future: loadKd(),
             builder: (_, snapshot) {
               return snapshot.hasData
-                  ? KdListWidget(kdListData: snapshot.data)
+                  ? KdListWidget(buildContext:context,kdListData: snapshot.data)
                   : Center(child: CircularProgressIndicator());
             },
           ),
@@ -34,11 +35,12 @@ class _KnowledgeState extends State<KnowledgeWidget> {
 }
 
 class KdListWidget extends StatelessWidget {
+  BuildContext buildContext;
   // Generate a random color.
   final random = Random();
   List<KdListData> kdListData;
 
-  KdListWidget({Key key, @required this.kdListData}) : super(key: key);
+  KdListWidget({Key key, this.buildContext,@required this.kdListData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,26 +65,33 @@ class KdListWidget extends StatelessWidget {
                 random.nextInt(256),
                 1,
               );
-              return Card(
-                elevation: 5.0, //设置阴影
-                shape: const RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(8.0))), //设置圆角
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                      child: Text(
-                        "${kdListData[index].name}",
-                        style: TextStyle(color: _color),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(buildContext).push(MaterialPageRoute(builder: (_) {
+                    return KnowledgeDetail(kdListData: kdListData[index]);
+                  }));
+                },
+                child: Card(
+                  elevation: 5.0, //设置阴影
+                  shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(8.0))), //设置圆角
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        child: Text(
+                          "${kdListData[index].name}",
+                          style: TextStyle(color: _color),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                      child: Text("${content.toString()}"),
-                    )
-                  ],
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                        child: Text("${content.toString()}"),
+                      )
+                    ],
+                  ),
                 ),
               );
             },

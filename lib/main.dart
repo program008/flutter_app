@@ -35,8 +35,11 @@ class _MyWidgetSate extends State<MyWidget>
   bool navigation = false;
   bool project = false;
 
+  String title;
+
   @override
   void initState() {
+    title = "首页";
     controller = TabController(length: 4, vsync: this);
   }
 
@@ -44,7 +47,7 @@ class _MyWidgetSate extends State<MyWidget>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("首页"),
+        title: Text("$title"),
         centerTitle: true,
         leading: Builder(builder: (context) {
           return IconButton(
@@ -146,15 +149,19 @@ class _MyWidgetSate extends State<MyWidget>
       switch (index) {
         case 0:
           home = true;
+          title = "首页";
           break;
         case 1:
           knowledge = true;
+          title = "知识体系";
           break;
         case 2:
           navigation = true;
+          title = "导航";
           break;
         case 3:
           project = true;
+          title = "项目";
           break;
       }
     });
