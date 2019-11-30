@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/entity_factory.dart';
+import 'package:flutter_app/view/loading_dialog.dart';
 import 'package:flutter_app/view/progress_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_info_entity.dart';
 
 class Register extends StatefulWidget {
@@ -50,50 +52,21 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  void register(String username, String password, String repassword) async {
+  Future<LoginInfoEntity> register(
+      String username, String password, String repassword) async {
     print("username $username password $password repassword $repassword");
 
     var dio = Dio();
-    try {
-      Response<String> response = await dio
-          .post("https://www.wanandroid.com/user/register", queryParameters: {
-        "username": username,
-        "password": password,
-        "repassword": repassword
-      });
+    Response<String> response = await dio
+        .post("https://www.wanandroid.com/user/register", queryParameters: {
+      "username": username,
+      "password": password,
+      "repassword": repassword
+    });
 
-      LoginInfoEntity loginInfoEntity =
-          EntityFactory.generateOBJ<LoginInfoEntity>(jsonDecode(response.data));
-      print("${response.data}");
-      if (loginInfoEntity.errorCode == 0) {
-        //注册成功
-        Navigator.of(context).pop();
-      } else {
-        //注册失败
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("注册失败"),
-                content: Text("${loginInfoEntity.errorMsg}"),
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                //设置圆角,
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text("确定"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
-      }
-    } catch (e) {
-      print("访问异常：$e");
-    }
+    LoginInfoEntity loginInfoEntity =
+        EntityFactory.generateOBJ<LoginInfoEntity>(jsonDecode(response.data));
+    return loginInfoEntity;
   }
 
   @override
@@ -233,10 +206,51 @@ class _RegisterState extends State<Register> {
                           _pwdState &&
                           (_pwdcontroller.text == _pwdcontroller2.text)) {
                         _checkStr = '页面跳转下期见咯！';
-                        register(
-                            _phonecontroller.text.trim(),
-                            _pwdcontroller.text.trim(),
-                            _pwdcontroller2.text.trim());
+                        Navigator.push(context,
+                            DialogRouter(LoadingDialog(true, title: "注册中...")));
+
+                        Future<LoginInfoEntity>.delayed(Duration(seconds: 2),
+                            () {
+                          return register(
+                              _phonecontroller.text.trim(),
+                              _pwdcontroller.text.trim(),
+                              _pwdcontroller2.text.trim());
+                        }).then((data) async {
+                          //执行成功会走到这里
+                          print(data);
+                          if (data.errorCode == 0) {
+                            Navigator.of(context).pop();
+                          } else {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("注册失败"),
+                                    content: Text("${data.errorMsg}"),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0))),
+                                    //设置圆角,
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("确定"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          }
+                        }).catchError((e) {
+                          //执行失败会走到这里
+                          print(e);
+                        }).whenComplete(() {
+                          //无论成功或失败都会走到这里
+                          print('结束');
+                          Navigator.of(context).pop();
+                        });
                       }
 
                       print("_checkStr $_checkStr");

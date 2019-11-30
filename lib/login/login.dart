@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/entity_factory.dart';
 import 'package:flutter_app/login/register.dart';
+import 'package:flutter_app/view/loading_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_info_entity.dart';
 
 class Login extends StatefulWidget {
@@ -39,7 +41,7 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<LoginInfoData> login(String username, String password) async {
+  Future<LoginInfoEntity> login(String username, String password) async {
     print("username $username password $password");
     Response<String> response = await Dio().post(
         "https://www.wanandroid.com/user/login",
@@ -48,32 +50,7 @@ class _LoginState extends State<Login> {
     LoginInfoEntity loginInfoEntity =
         EntityFactory.generateOBJ<LoginInfoEntity>(jsonDecode(response.data));
 
-    if (loginInfoEntity.errorCode == 0) {
-      //登录成功
-      Navigator.of(context).pop();
-    } else {
-      //登录失败
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("登录失败"),
-              content: Text("${loginInfoEntity.errorMsg}"),
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
-              //设置圆角,
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("确定"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
-    }
+    return loginInfoEntity;
   }
 
   @override
@@ -180,8 +157,50 @@ class _LoginState extends State<Login> {
                       _checkPwd();
                       if (_phoneState && _pwdState) {
                         _checkStr = '页面跳转下期见咯！';
-                        login(_phonecontroller.text.trim(),
-                            _pwdcontroller.text.trim());
+                        Navigator.push(context, DialogRouter(LoadingDialog(true,title:"登录中...")));
+
+                        Future<LoginInfoEntity>.delayed(Duration(seconds: 2),(){
+                          return login(_phonecontroller.text.trim(),
+                              _pwdcontroller.text.trim());
+                        }).then((data) async {
+                          //执行成功会走到这里
+                          print(data);
+                          if (data.errorCode == 0) {
+                            //登录成功
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            prefs.setString("login", jsonEncode(data.data.toJson()));
+                            Navigator.of(context).pop();
+                          } else {
+                            //登录失败
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("登录失败"),
+                                    content: Text("${data.errorMsg}"),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                                    //设置圆角,
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("确定"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          }
+                        }).catchError((e){
+                          //执行失败会走到这里
+                          print(e);
+                        }).whenComplete((){
+                          //无论成功或失败都会走到这里
+                          print('结束');
+                          Navigator.of(context).pop();
+                        });
                       } else {
                         if (!_phoneState) {
                           _checkStr = '请输入11位手机号！';
@@ -189,6 +208,8 @@ class _LoginState extends State<Login> {
                           _checkStr = '请输入6-10位密码！';
                         }
                       }
+
+                      print("$_checkStr");
                     },
                   ),
                 ),

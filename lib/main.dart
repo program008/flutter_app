@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aboutwe.dart';
 import 'package:flutter_app/home/home.dart';
 import 'package:flutter_app/knowledge/knowledge.dart';
+import 'package:flutter_app/login/login_info_entity.dart';
 import 'package:flutter_app/navigation/navigation.dart';
 import 'package:flutter_app/project/project.dart';
 import 'package:flutter_app/search/search.dart';
 import 'package:flutter_app/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login/login.dart';
 
@@ -65,7 +69,7 @@ class _MyWidgetSate extends State<MyWidget>
             icon: Icon(Icons.search),
             onPressed: () {
               print("search");
-              Navigator.of(context).push(MaterialPageRoute(builder: (_){
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
                 return SearchWidget();
               }));
             },
@@ -198,7 +202,23 @@ class _BottomButtonState extends State<BottomButtonWidget> {
   }
 }
 
-class LeftDrawer extends StatelessWidget {
+Future<String> login() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var logininfo = prefs.getString("login");
+  if (logininfo.isNotEmpty) {
+    print("登录信息：$logininfo");
+    var info = LoginInfoData.fromJson(jsonDecode(logininfo));
+    return info.username;
+  }
+  return null;
+}
+
+class LeftDrawer extends StatefulWidget {
+  @override
+  _LeftDrawerState createState() => _LeftDrawerState();
+}
+
+class _LeftDrawerState extends State {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -218,13 +238,25 @@ class LeftDrawer extends StatelessWidget {
                   height: 96,
                 ),
                 GestureDetector(
-                  child: Text(
-                    "登录",
-                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  child: FutureBuilder<String>(
+                    future: login(),
+                    builder: (_, snapshot) {
+                      return snapshot.hasData
+                          ? Text(
+                              "${snapshot.data ?? "登录"}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 24),
+                            )
+                          : Text(
+                              "${snapshot.data ?? "登录"}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 24),
+                            );
+                    },
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
                       return Login();
                     }));
                   },

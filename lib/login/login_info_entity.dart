@@ -20,6 +20,13 @@ class LoginInfoEntity {
 		data['errorMsg'] = this.errorMsg;
 		return data;
 	}
+
+	@override
+	String toString() {
+		return 'LoginInfoEntity{data: $data, errorCode: $errorCode, errorMsg: $errorMsg}';
+	}
+
+
 }
 
 class LoginInfoData {
@@ -77,4 +84,11 @@ class LoginInfoData {
 		data['username'] = this.username;
 		return data;
 	}
+
+	@override
+	String toString() {
+		return 'LoginInfoData{password: $password, publicName: $publicName, chapterTops: $chapterTops, icon: $icon, nickname: $nickname, admin: $admin, collectIds: $collectIds, id: $id, type: $type, email: $email, token: $token, username: $username}';
+	}
+
+
 }
