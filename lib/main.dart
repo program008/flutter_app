@@ -42,11 +42,44 @@ class _MyWidgetSate extends State<MyWidget>
   bool project = false;
 
   String title;
-
+  ///
+  /// tab改变监听
+  ///
+  _onTabChanged() {
+    if (controller.index.toDouble() == controller.animation.value) {
+      print("并更新数据 ${controller.index}");
+      //赋值 并更新数据
+      setState(() {
+        home = false;
+        knowledge = false;
+        navigation = false;
+        project = false;
+        switch (controller.index) {
+          case 0:
+            home = true;
+            title = "首页";
+            break;
+          case 1:
+            knowledge = true;
+            title = "知识体系";
+            break;
+          case 2:
+            navigation = true;
+            title = "导航";
+            break;
+          case 3:
+            project = true;
+            title = "项目";
+            break;
+        }
+      });
+    }
+  }
   @override
   void initState() {
     title = "首页";
     controller = TabController(length: 4, vsync: this);
+    controller.addListener(()=>_onTabChanged());
   }
 
   @override
