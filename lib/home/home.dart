@@ -156,6 +156,7 @@ class ArticleItem extends StatelessWidget {
                   }));
                 },
                 child: Card(
+                  margin: EdgeInsets.all(10.0),
                   child: ListTile(
                     title: Row(
                       mainAxisSize: MainAxisSize.max,
