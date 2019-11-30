@@ -98,7 +98,7 @@ class _MyWidgetSate extends State<MyWidget>
           //#CCCCCC
           onTap: onTabTapped,
           indicatorPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          labelPadding: EdgeInsets.zero,
+          labelPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           tabs: <Widget>[
             Tab(
                 text: "首页",
@@ -106,8 +106,8 @@ class _MyWidgetSate extends State<MyWidget>
                   image: AssetImage(home
                       ? "assets/images/icon_home_pager_selected.png"
                       : "assets/images/icon_home_pager_not_selected.png"),
-                  width: 28,
-                  height: 28,
+                  width: 24,
+                  height: 24,
                 )),
             Tab(
               text: "知识体系",
@@ -115,8 +115,8 @@ class _MyWidgetSate extends State<MyWidget>
                 image: AssetImage(knowledge
                     ? "assets/images/icon_knowledge_hierarchy_selected.png"
                     : "assets/images/icon_knowledge_hierarchy_not_selected.png"),
-                width: 28,
-                height: 28,
+                width: 24,
+                height: 24,
               ),
             ),
             Tab(
@@ -125,8 +125,8 @@ class _MyWidgetSate extends State<MyWidget>
                 image: AssetImage(navigation
                     ? "assets/images/icon_navigation_selected.png"
                     : "assets/images/icon_navigation_not_selected.png"),
-                width: 28,
-                height: 28,
+                width: 24,
+                height: 24,
               ),
             ),
             Tab(
@@ -135,8 +135,8 @@ class _MyWidgetSate extends State<MyWidget>
                 image: AssetImage(project
                     ? "assets/images/icon_project_selected.png"
                     : "assets/images/icon_project_not_selected.png"),
-                width: 28,
-                height: 28,
+                width: 24,
+                height: 24,
               ),
             ),
           ],
