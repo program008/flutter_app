@@ -53,11 +53,27 @@ class _KnowledgeDetailState extends State<KnowledgeDetail> {
                               children: <Widget>[
                                 Container(
                                   margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                  child: Image(
-                                    image: AssetImage(
-                                        "assets/images/icon_like_article_not_selected.png"),
-                                    width: 24,
-                                    height: 24,
+                                  child: GestureDetector(
+                                    child: Image(
+                                      image: AssetImage(articles[index].collect
+                                          ? "assets/images/icon_like_article_selected.png"
+                                          : "assets/images/icon_like_article_not_selected.png"),
+                                      width: 24,
+                                      height: 24,
+                                    ),
+                                    onTap: () {
+                                      print('收藏${articles[index].collect}');
+                                      setState(() {
+                                        if (articles[index].collect) {
+                                          articles[index].collect = false;
+                                          //取消收藏
+                                        } else {
+                                          articles[index].collect = true;
+                                          //收藏
+                                        }
+                                        print('收藏2${articles[index].collect}');
+                                      });
+                                    },
                                   ),
                                 ),
                                 Expanded(

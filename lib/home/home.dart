@@ -124,13 +124,35 @@ Future<List<ArticleListDataData>> loadArticles(int pageSize) async {
   return null;
 }
 
-class ArticleItem extends StatelessWidget {
+/// 收藏文章
+Future<int> collectArticle(int id) async {
+  Dio dio = Dio();
+  Map<String, dynamic> headers = new Map();
+  headers['Cookie'] = "loginUserName=program007";
+  headers['Cookie'] = "loginUserPassword=123456789";
+  Options options = new Options(
+      headers:headers
+  );
+  Response<String> response = await dio.post("https://www.wanandroid.com/lg/collect/$id/json",options: options);
+  var result = jsonDecode(response.data);
+  int errorCode = result['errorCode'];
+  String errorMsg = result['errorMsg'];
+  print("errorCode = $errorCode , errorMsg = $errorMsg");
+  return errorCode;
+}
+
+class ArticleItem extends StatefulWidget {
   List<ArticleListDataData> articles;
   BuildContext buildContext;
 
   ArticleItem({Key key, this.buildContext, @required this.articles})
       : super(key: key);
 
+  @override
+  _ArticleItemStatate createState() => _ArticleItemStatate();
+}
+
+class _ArticleItemStatate extends State<ArticleItem> {
   @override
   Widget build(BuildContext context) {
     var textStyle1 = TextStyle(fontSize: 16, color: Colors.black);
@@ -143,15 +165,15 @@ class ArticleItem extends StatelessWidget {
           child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: articles.length,
+            itemCount: widget.articles.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  Navigator.of(buildContext)
+                  Navigator.of(widget.buildContext)
                       .push(MaterialPageRoute(builder: (_) {
                     return Browser(
-                      url: articles[index].link,
-                      title: articles[index].title,
+                      url: widget.articles[index].link,
+                      title: widget.articles[index].title,
                     );
                   }));
                 },
@@ -164,11 +186,27 @@ class ArticleItem extends StatelessWidget {
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                          child: Image(
-                            image: AssetImage(
-                                "assets/images/icon_like_article_not_selected.png"),
-                            width: 24,
-                            height: 24,
+                          child: GestureDetector(
+                            child: Image(
+                              image: AssetImage(widget.articles[index].collect
+                                  ? "assets/images/icon_like_article_selected.png"
+                                  : "assets/images/icon_like_article_not_selected.png"),
+                              width: 24,
+                              height: 24,
+                            ),
+                            onTap: () {
+                              print('收藏');
+                              setState(() {
+                                if (widget.articles[index].collect) {
+                                  widget.articles[index].collect = false;
+                                  //取消收藏
+                                } else {
+                                  widget.articles[index].collect = true;
+                                  //收藏
+                                  collectArticle(widget.articles[index].id);
+                                }
+                              });
+                            },
                           ),
                         ),
                         Expanded(
@@ -189,7 +227,7 @@ class ArticleItem extends StatelessWidget {
                                     Expanded(
                                       child: Container(
                                         child: Text(
-                                          "${articles[index].title}",
+                                          "${widget.articles[index].title}",
                                           style: textStyle1,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -204,18 +242,18 @@ class ArticleItem extends StatelessWidget {
                                     Padding(
                                       padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                                       child: Text(
-                                        "${articles[index].author.isNotEmpty ? "作者：${articles[index].author}" : ""}",
+                                        "${widget.articles[index].author.isNotEmpty ? "作者：${widget.articles[index].author}" : ""}",
                                         style: textStyle2,
                                       ),
                                     ),
                                     Expanded(
                                       child: Text(
-                                        "分类：${articles[index].chapterName}",
+                                        "分类：${widget.articles[index].chapterName}",
                                         style: textStyle2,
                                       ),
                                     ),
                                     Text(
-                                      "时间：${articles[index].niceShareDate}",
+                                      "时间：${widget.articles[index].niceShareDate}",
                                       style: textStyle2,
                                     ),
                                   ],
