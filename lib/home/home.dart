@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/res/colors.dart';
 import 'package:flutter_app/webview/browser.dart';
 import 'package:flutter_banner_swiper/flutter_banner_swiper.dart';
+
 import '../entity_factory.dart';
 import 'adpicture.dart';
 import 'article_list_entity.dart';
@@ -114,8 +117,11 @@ Future<List<BannerData>> loadAdPictures() async {
 /// 加载文章列表数据
 Future<List<ArticleListDataData>> loadArticles(int pageSize) async {
   Dio dio = Dio();
+  var cookieJar=CookieJar();
+  dio.interceptors.add(CookieManager(cookieJar));
   Response<String> response =
       await dio.get("https://www.wanandroid.com/article/list/$pageSize/json");
+  print("加载文章列表数据：${response.data}");
   var articleList =
       EntityFactory.generateOBJ<ArticleListEntity>(jsonDecode(response.data));
   if (articleList.errorCode == 0) {
@@ -127,13 +133,21 @@ Future<List<ArticleListDataData>> loadArticles(int pageSize) async {
 /// 收藏文章
 Future<int> collectArticle(int id) async {
   Dio dio = Dio();
-  Map<String, dynamic> headers = new Map();
-  headers['Cookie'] = "loginUserName=program007";
-  headers['Cookie'] = "loginUserPassword=123456789";
-  Options options = new Options(
-      headers:headers
-  );
-  Response<String> response = await dio.post("https://www.wanandroid.com/lg/collect/$id/json",options: options);
+  var cookieJar=CookieJar();
+  dio.interceptors.add(CookieManager(cookieJar));
+  Response<String> response = await dio.post("https://www.wanandroid.com/lg/collect/$id/json");
+  var result = jsonDecode(response.data);
+  int errorCode = result['errorCode'];
+  String errorMsg = result['errorMsg'];
+  print("errorCode = $errorCode , errorMsg = $errorMsg");
+  return errorCode;
+}
+/// 取消收藏文章
+Future<int> unCollectArticle(int id) async {
+  Dio dio = Dio();
+  var cookieJar=CookieJar();
+  dio.interceptors.add(CookieManager(cookieJar));
+  Response<String> response = await dio.post("https://www.wanandroid.com/lg/uncollect_originId/$id/json");
   var result = jsonDecode(response.data);
   int errorCode = result['errorCode'];
   String errorMsg = result['errorMsg'];
@@ -200,6 +214,7 @@ class _ArticleItemStatate extends State<ArticleItem> {
                                 if (widget.articles[index].collect) {
                                   widget.articles[index].collect = false;
                                   //取消收藏
+                                  unCollectArticle(widget.articles[index].id);
                                 } else {
                                   widget.articles[index].collect = true;
                                   //收藏

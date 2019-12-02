@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/entity_factory.dart';
 import 'package:flutter_app/login/register.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_app/view/loading_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_info_entity.dart';
-
+import 'package:cookie_jar/cookie_jar.dart';
 class Login extends StatefulWidget {
   final String title = '极速登录';
 
@@ -43,7 +44,10 @@ class _LoginState extends State<Login> {
 
   Future<LoginInfoEntity> login(String username, String password) async {
     print("username $username password $password");
-    Response<String> response = await Dio().post(
+    var dio = Dio();
+    var cookieJar=CookieJar();
+    dio.interceptors.add(CookieManager(cookieJar));
+    Response<String> response = await dio.post(
         "https://www.wanandroid.com/user/login",
         queryParameters: {"username": username, "password": password});
 
