@@ -5,8 +5,10 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/res/colors.dart';
 import 'package:flutter_app/webview/browser.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../entity_factory.dart';
+import '../message.dart';
 import 'kd_list_entity.dart';
 import 'kd_detail_entity.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -21,20 +23,19 @@ class KnowledgeDetail extends StatefulWidget {
 }
 
 /// 收藏文章
-Future<int> collectArticle(int id) async {
+Future<Massage> collectArticle(int id) async {
   Dio dio = Dio();
-  var cookieJar = CookieJar();
+  var cookieJar=CookieJar();
   dio.interceptors.add(CookieManager(cookieJar));
-  Response<String> response =
-      await dio.post("https://www.wanandroid.com/lg/collect/$id/json");
+  Response<String> response = await dio.post("https://www.wanandroid.com/lg/collect/$id/json");
   var result = jsonDecode(response.data);
   int errorCode = result['errorCode'];
   String errorMsg = result['errorMsg'];
   print("errorCode = $errorCode , errorMsg = $errorMsg");
-  return errorCode;
+  return Massage(errorCode: errorCode,errorMsg: errorMsg);
 }
 /// 取消收藏文章
-Future<int> unCollectArticle(int id) async {
+Future<Massage> unCollectArticle(int id) async {
   Dio dio = Dio();
   var cookieJar=CookieJar();
   dio.interceptors.add(CookieManager(cookieJar));
@@ -43,7 +44,7 @@ Future<int> unCollectArticle(int id) async {
   int errorCode = result['errorCode'];
   String errorMsg = result['errorMsg'];
   print("errorCode = $errorCode , errorMsg = $errorMsg");
-  return errorCode;
+  return Massage(errorCode: errorCode,errorMsg: errorMsg);
 }
 class _KnowledgeDetailState extends State<KnowledgeDetail> {
   Widget detailList(BuildContext buildContext, int cid) {
@@ -169,18 +170,30 @@ class _DetailWidgetState extends State<DetailWidget> {
                             ),
                             onTap: () {
                               print('收藏${widget.articles[index].collect}');
-                              setState(() {
-                                if (widget.articles[index].collect) {
-                                  widget.articles[index].collect = false;
-                                  //取消收藏
-                                  unCollectArticle(widget.articles[index].id);
-                                } else {
-                                  widget.articles[index].collect = true;
-                                  //收藏
-                                  collectArticle(widget.articles[index].id);
-                                }
-                                print('收藏2${widget.articles[index].collect}');
-                              });
+                              if (widget.articles[index].collect) {
+                                unCollectArticle(widget.articles[index].id).then((msg){
+                                  if(msg.errorCode == 0){
+                                    setState(() {
+                                      widget.articles[index].collect = false;
+                                    });
+                                  }else{
+                                    Fluttertoast.showToast(msg: msg.errorMsg);
+                                  }
+                                });
+                                //取消收藏
+                              } else {
+                                //收藏
+                                collectArticle(widget.articles[index].id).then((msg){
+                                  if(msg.errorCode == 0){
+                                    setState(() {
+                                      widget.articles[index].collect = true;
+                                    });
+                                  }else{
+                                    Fluttertoast.showToast(msg: msg.errorMsg);
+                                  }
+                                });
+
+                              }
                             },
                           ),
                         ),

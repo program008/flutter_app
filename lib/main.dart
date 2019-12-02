@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aboutwe.dart';
 import 'package:flutter_app/home/home.dart';
@@ -10,7 +12,8 @@ import 'package:flutter_app/project/project.dart';
 import 'package:flutter_app/search/search.dart';
 import 'package:flutter_app/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:cookie_jar/cookie_jar.dart';
+import 'collect/collect.dart';
 import 'login/login.dart';
 
 void main() => runApp(MyApp());
@@ -236,12 +239,21 @@ class _BottomButtonState extends State<BottomButtonWidget> {
 }
 
 Future<String> login() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  var logininfo = prefs.getString("login");
-  if (logininfo.isNotEmpty) {
-    print("登录信息：$logininfo");
-    var info = LoginInfoData.fromJson(jsonDecode(logininfo));
-    return info.username;
+  Dio dio = Dio();
+  var cookieJar = CookieJar();
+  dio.interceptors.add(CookieManager(cookieJar));
+  var cookies = cookieJar.loadForRequest(Uri.parse("https://www.wanandroid.com/user/login"));
+  print("cookie：$cookies");
+  print("cookie：${cookies.toString().contains("loginUserName")}");
+  if(cookies.toString().contains("loginUserName")){
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var logininfo = prefs.getString("login");
+    print("logininfo：$logininfo");
+    if (logininfo.isNotEmpty) {
+      print("登录信息：$logininfo");
+      var info = LoginInfoData.fromJson(jsonDecode(logininfo));
+      return info.username;
+    }
   }
   return null;
 }
@@ -306,6 +318,9 @@ class _LeftDrawerState extends State {
             title: Text("我的收藏"),
             onTap: () {
               Navigator.pop(context);
+              Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                return CollectWidget();
+              }));
             },
           ),
           ListTile(

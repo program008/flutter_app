@@ -7,6 +7,7 @@ import 'package:flutter_app/entity_factory.dart';
 import 'package:flutter_app/login/register.dart';
 import 'package:flutter_app/view/loading_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_info_entity.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -171,31 +172,13 @@ class _LoginState extends State<Login> {
                           print(data);
                           if (data.errorCode == 0) {
                             //登录成功
+                            Fluttertoast.showToast(msg: '登录成功！');
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             prefs.setString("login", jsonEncode(data.data.toJson()));
                             Navigator.of(context).pop();
                           } else {
                             //登录失败
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text("登录失败"),
-                                    content: Text("${data.errorMsg}"),
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                                    //设置圆角,
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text("确定"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
+                            Fluttertoast.showToast(msg: data.errorMsg);
                           }
                         }).catchError((e){
                           //执行失败会走到这里
