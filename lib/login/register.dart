@@ -85,8 +85,10 @@ class _RegisterState extends State<Register> {
               Padding(
                   padding: EdgeInsets.all(30.0),
                   child: Image.asset(
-                    'assets/images/ic_launcher.png',
+                    'assets/images/logo2.png',
                     scale: 1.2,
+                    width: 120,
+                    height: 120,
                   )),
               Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 15.0),
