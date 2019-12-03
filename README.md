@@ -1,20 +1,5 @@
-# flutter_app
+## WanAndroid of flutter
 
-A new Flutter application.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-#### Flutter learn tour codebase
-> /lib/cookbook base code demo
+学习flutter开发，使用[玩Android 开放API](https://www.wanandroid.com/blog/show/2)接口开发一个基于技术博客APP，
+可以查看相关技术博客，并且可以将自己喜欢的文章收藏起来~~~
 
