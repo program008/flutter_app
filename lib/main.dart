@@ -24,7 +24,7 @@ class JsonPicPage extends StatelessWidget {
     );
 
     // This creates the controller
-    var emojiAnimation = await instance.prepareAnimation(emojiComposition,repeatCount: RepeatCount.nTimes(3));
+    var emojiAnimation = await instance.prepareAnimation(emojiComposition,repeatCount: RepeatCount.infinite());
     emojiAnimation.start();
     return FluttieAnimation(emojiAnimation);
   }
