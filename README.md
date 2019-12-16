@@ -8,7 +8,8 @@
 [首页1](https://github.com/program008/flutter_app/blob/wanandroid/screens/%E9%A6%96%E9%A1%B501.png?raw=true)
 
 + 实现无限滚动轮播图
->     var bannerWidget = BannerSwiper(
+ ```flutter
+     var bannerWidget = BannerSwiper(
       //width  和 height 是图片的高宽比  不用传具体的高宽   必传
       height: 5,
       width: 9,
@@ -56,10 +57,10 @@
             });
       },
     );
-
+ ```
 + 在flutter中涉及到异步更新列表数据的时候，可以使用FutureBuilder来封装。
-
->  FutureBuilder<List<ArticleListDataData>>(
+ ```flutter
+FutureBuilder<List<ArticleListDataData>>(
             future: loadArticles(0),
             builder: (_, snapshot) {
               return snapshot.hasData
@@ -68,12 +69,13 @@
             },
            )
 
-
+ ```
 
 ##### 二，知识体系
 ##### 三，导航
 + 左右列表联动主要代码
-> Row(
+ ```flutter
+ Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
@@ -105,8 +107,10 @@
                   )),
             ],
           )
- 
- >   Widget getRow(int i) {
+   ```
+           
+  ```flutter
+    Widget getRow(int i) {
     Color textColor = Theme.of(context).primaryColor; //字体颜色
     return GestureDetector(
       child: Container(
@@ -139,11 +143,11 @@
       },
     );
   }
+  ``` 
   
   
-  
-  
-  > Widget getChip({BuildContext buildContext, int i}) {
+  ```flutter
+   Widget getChip({BuildContext buildContext, int i}) {
     //更新对应下标数据
     _updateArticles(i);
     return Wrap(
@@ -175,10 +179,12 @@
       ).toList(),
     );
   }         
-          
+  ```        
           
 ##### 四，项目
 + 顶部TabBar和主内容TabBarView联动主要代码
+```flutter
+
 >   Widget tabContainer(List<ProjectTitleListData> projectTitles) {
     Widget tabBarContainer = TabBar(
       isScrollable: true,
@@ -226,6 +232,8 @@
 
     return tabContainer;
   }
+  
+```
 ##### 五，搜索页
 ##### 六，抽屉页
 
@@ -234,13 +242,17 @@
 + 添加依赖
 > dio_cookie_manager: 1.0.0
 + 请求保存cookie
->   var dio = Dio();
+ ```flutter    
+    var dio = Dio();
     var cookieJar=CookieJar();
     dio.interceptors.add(CookieManager(cookieJar));
+  ```
 + 请求时携带cookie
-> Dio dio = Dio();
+ ```flutter
+  Dio dio = Dio();
   var cookieJar=CookieJar();
   dio.interceptors.add(CookieManager(cookieJar));
+ ```
 
   
 
