@@ -183,6 +183,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.9"
+  dartin:
+    dependency: "direct main"
+    description:
+      name: dartin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   date_format:
     dependency: "direct main"
     description:
@@ -465,7 +472,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.19.0"
+    version: "0.21.0"
   scoped_model:
     dependency: "direct main"
     description:
