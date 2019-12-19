@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app/mvvm/helper/toast.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,12 +13,71 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FirstScreen(),
+      home: RoutePageWithValue("已经是最后一页啦"),
     );
   }
 }
 
-class FirstScreen extends StatelessWidget{
+class RoutePageWithValue extends StatelessWidget {
+  final String lastPageName;
+
+  BuildContext context;
+
+  RoutePageWithValue(this.lastPageName);
+  var currentTime = 0;
+  _showDialog() {
+    showDialog<Null>(
+      context: context,
+      child: new AlertDialog(content: new Text('退出app'), actions: <Widget>[
+        new FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                SystemNavigator.pop();
+              }
+            },
+            child: new Text('确定'))
+      ]),
+    );
+  }
+
+  Future<bool> _requestPop() {
+    print("返回键触发");
+    //_showDialog();
+    if(DateTime.now().millisecondsSinceEpoch - currentTime <2000){
+      Navigator.pop(context);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      } else {
+        SystemNavigator.pop();
+      }
+    }else{
+      currentTime = DateTime.now().millisecondsSinceEpoch;
+      Toast.show("再点一次退出", context,gravity: Toast.BOTTOM);
+    }
+    return new Future.value(false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    this.context = context;
+    //监听左上角返回和实体返回WillPopScope
+    return new WillPopScope(
+        child: new Scaffold(
+            appBar: new AppBar(
+              title: new Text('RoutePageWithValue'),
+              centerTitle: true,
+            ),
+            body: new Center(
+              child: new Text('$lastPageName'),
+            )),
+        onWillPop: _requestPop);
+  }
+}
+
+class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget _shareWidget() {
@@ -64,7 +125,7 @@ class FirstScreen extends StatelessWidget{
                     child: new Text(
                       '取  消',
                       style:
-                      new TextStyle(fontSize: 18.0, color: Colors.blueGrey),
+                          new TextStyle(fontSize: 18.0, color: Colors.blueGrey),
                     )),
               ),
             ),
@@ -80,20 +141,20 @@ class FirstScreen extends StatelessWidget{
             return _shareWidget();
           });
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("底部对话框"),
       ),
       body: Center(
           child: RaisedButton(
-            child: Text("显示"),
-            onPressed: () {
-              showPub();
-            },
-          )),
+        child: Text("显示"),
+        onPressed: () {
+          showPub();
+        },
+      )),
     );
   }
-
 }
 
 List<String> nameItems = <String>[
