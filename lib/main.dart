@@ -24,7 +24,8 @@ class JsonPicPage extends StatelessWidget {
     );
 
     // This creates the controller
-    var emojiAnimation = await instance.prepareAnimation(emojiComposition,repeatCount: RepeatCount.infinite());
+    var emojiAnimation = await instance.prepareAnimation(emojiComposition,
+        repeatCount: RepeatCount.infinite());
     emojiAnimation.start();
     return FluttieAnimation(emojiAnimation);
   }
@@ -33,10 +34,17 @@ class JsonPicPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 5), () {
       print("定时结束，进入主界面");
-      Navigator.of(context).pop();
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-        return MainApp();
-      }));
+//      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+//        return MainApp();
+//      }));
+      ////跳转并关闭当前页面
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) {
+          return MainApp();
+        }),
+        (route) => route == null,
+      );
     });
     return Scaffold(
       body: Stack(
@@ -54,25 +62,19 @@ class JsonPicPage extends StatelessWidget {
                 FutureBuilder<Widget>(
                   future: loadPic("W"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
                 FutureBuilder<Widget>(
                   future: loadPic("A"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
                 FutureBuilder<Widget>(
                   future: loadPic("N"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
               ],
@@ -86,25 +88,19 @@ class JsonPicPage extends StatelessWidget {
                 FutureBuilder<Widget>(
                   future: loadPic("A"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
                 FutureBuilder<Widget>(
                   future: loadPic("N"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
                 FutureBuilder<Widget>(
                   future: loadPic("D"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
               ],
@@ -118,17 +114,13 @@ class JsonPicPage extends StatelessWidget {
                 FutureBuilder<Widget>(
                   future: loadPic("R"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        :Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
                 FutureBuilder<Widget>(
                   future: loadPic("O"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
               ],
@@ -142,16 +134,13 @@ class JsonPicPage extends StatelessWidget {
                 FutureBuilder<Widget>(
                   future: loadPic("I"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
                 FutureBuilder<Widget>(
                   future: loadPic("D"),
                   builder: (_, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data:Center();
+                    return snapshot.hasData ? snapshot.data : Center();
                   },
                 ),
               ],

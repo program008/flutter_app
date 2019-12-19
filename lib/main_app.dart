@@ -18,24 +18,24 @@ import 'login/login.dart';
 
 //void main() => runApp(MainApp());
 
-class MainApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Startup Name Generator',
-      home: MyWidget(),
-    );
-  }
-}
+//class MainApp extends StatelessWidget {
+//  // This widget is the root of your application.
+//  @override
+//  Widget build(BuildContext context) {
+//    return MaterialApp(
+//      debugShowCheckedModeBanner: false,
+//      title: 'Startup Name Generator',
+//      home: MyWidget(),
+//    );
+//  }
+//}
 
-class MyWidget extends StatefulWidget {
+class MainApp extends StatefulWidget {
   @override
   _MyWidgetSate createState() => _MyWidgetSate();
 }
 
-class _MyWidgetSate extends State<MyWidget>
+class _MyWidgetSate extends State<MainApp>
     with SingleTickerProviderStateMixin {
   TabController controller;
 
