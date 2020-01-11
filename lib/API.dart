@@ -1,6 +1,9 @@
 import 'dart:math' as math;
+
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+
+import 'entity_factory.dart';
+import 'oldcobbers/bean/top250_entity.dart';
 
 typedef RequestCallBack<T> = void Function(T value);
 
@@ -33,6 +36,7 @@ class API {
     connectTimeout: 5000,
     receiveTimeout: 3000,
   ));
+
   //var _request = HttpRequest(API.BASE_URL);
 
   Future<dynamic> _query(String uri, String value) async {
@@ -44,22 +48,19 @@ class API {
   ///当日可播放电影已经更新
   void getTodayPlay(RequestCallBack requestCallBack) async {
     int start = math.Random().nextInt(220);
-    var result = await _request.get(TOP_250 + '?start=$start&count=4');
-    var resultList = result.data['subjects'];
-//    List<Subject> list =
-//    resultList.map<Subject>((item) => Subject.fromMap(item)).toList();
-//    List<String> todayUrls = [];
-//    todayUrls.add(list[0].images.medium);
-//    todayUrls.add(list[1].images.medium);
-//    todayUrls.add(list[2].images.medium);
-//
-//    var paletteGenerator =
-//    await PaletteGenerator.fromImageProvider(NetworkImage(list[0].images.small));
-//    var todayPlayBg = Color(0x44000000);
-//    if (paletteGenerator != null && paletteGenerator.colors.isNotEmpty) {
-//      todayPlayBg = (paletteGenerator.colors.toList()[0]);
-//    }
-//    requestCallBack({'list':todayUrls, 'todayPlayBg':todayPlayBg});
+    var result = await _request.get(TOP_250 +
+        '?start=$start&count=3&apikey=0b2bdeda43b5688921839c8ecb20399b');
+    var data = result.data;
+    print("data：$data");
+    var entity = EntityFactory.generateOBJ<Top250Entity>(data);
+
+    List<Top250Subject> list = entity.subjects;
+
+    List<String> todayUrls = [];
+    todayUrls.add(list[0].images.medium);
+    todayUrls.add(list[1].images.medium);
+    todayUrls.add(list[2].images.medium);
+    requestCallBack(todayUrls);
   }
 
   void top250(RequestCallBack requestCallBack, {count = 250}) async {
@@ -74,18 +75,15 @@ class API {
   ///影院热映 + 即将上映
   void getHotComingSoon(RequestCallBack requestCallBack) async {
     //影院热映
-    var result = await _request.get(IN_THEATERS);
-    var resultList = result.data['subjects'];
-//    List<Subject> hots =
-//    resultList.map<Subject>((item) => Subject.fromMap(item)).toList();
+    var result = await _request.get(IN_THEATERS + "&count=6");
+    var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    var hots = entity.subjects;
 
     //即将上映
-    result = await _request
-        .get(COMING_SOON + '?apikey=0b2bdeda43b5688921839c8ecb20399b');
-    resultList = result.data['subjects'];
-//    List<Subject> comingSoons =
-//    resultList.map<Subject>((item) => Subject.fromMap(item)).toList();
-//    requestCallBack({'hots':hots, 'comingSoons':comingSoons});
+    result = await _request.get(COMING_SOON + "&count=6");
+    var entity2 = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    var comingSoons = entity2.subjects;
+    requestCallBack({'hots': hots, 'comingSoons': comingSoons,'total':entity.total,'total2':entity2.total});
   }
 
   ///影院热映 https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b
