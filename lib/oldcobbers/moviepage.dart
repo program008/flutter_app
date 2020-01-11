@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/API.dart';
 import 'package:flutter_app/view/star_rating.dart';
 
 import 'bean/top250_entity.dart';
+import 'bean/weekly_entity.dart';
 
 class MoviePage extends StatefulWidget {
   String _title;
@@ -16,6 +19,7 @@ class MoviePage extends StatefulWidget {
 class _MoviePageSate extends State<MoviePage> {
   List<String> todayUrls = [];
   List<Top250Subject> hots = [];
+  List<Top250Subject> doubanhots = [];
   int total = 0;
   int total2 = 0;
   List<Top250Subject> comingSoons = [];
@@ -29,6 +33,8 @@ class _MoviePageSate extends State<MoviePage> {
       color: Color(0xff909090), fontSize: 16, fontWeight: FontWeight.w400);
   var movieTitles = ["影院热映", "即将上映"];
   var hot = true;
+  Top250Entity top250entity;
+  WeeklyEntity weeklyEntity;
 
   Widget topbtn(String image, String title) {
     return Column(
@@ -63,6 +69,26 @@ class _MoviePageSate extends State<MoviePage> {
         comingSoons = list["comingSoons"];
         total = list["total"];
         total2 = list["total2"];
+      });
+    });
+
+    //豆瓣热门
+    API().getHot((list) {
+      setState(() {
+        doubanhots = list;
+      });
+    });
+
+    //豆瓣榜单1
+    API().top250((entity) {
+      setState(() {
+        top250entity = entity;
+      });
+    });
+    //豆瓣榜单2
+    API().getWeekly((entity) {
+      setState(() {
+        weeklyEntity = entity;
       });
     });
   }
@@ -274,7 +300,69 @@ class _MoviePageSate extends State<MoviePage> {
         Container(
           margin: EdgeInsets.symmetric(vertical: 15),
           child: hot ? TheatersHot(hots) : ComingSoon(comingSoons),
-        )
+        ),
+        //豆瓣热门 title
+        Container(
+          constraints: BoxConstraints.expand(
+            height: Theme.of(context).textTheme.display1.fontSize + 20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      "豆瓣热门",
+                      style: text_black16,
+                    ),
+                  ),
+                ],
+              ),
+              FlatButton(
+                onPressed: () {},
+                child: Text(
+                  "全部250>",
+                  style: text_black14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        // 豆瓣热门content
+        Container(
+          child: TheatersHot(doubanhots),
+        ),
+        //豆瓣榜单
+        Container(
+          constraints: BoxConstraints.expand(
+            height: Theme.of(context).textTheme.display1.fontSize + 20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      "豆瓣榜单",
+                      style: text_black16,
+                    ),
+                  ),
+                ],
+              ),
+              FlatButton(
+                onPressed: () {},
+                child: Text(
+                  "全部10>",
+                  style: text_black14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        //豆瓣榜单的内容
+        DoubanList(top250entity, weeklyEntity)
       ],
     );
   }
@@ -446,6 +534,220 @@ class ComingSoon extends StatelessWidget {
               return Container();
             }
           }),
+    );
+  }
+}
+
+/// 豆瓣榜单
+class DoubanList extends StatelessWidget {
+  Top250Entity _top250entity;
+  WeeklyEntity _weeklyEntity;
+
+  DoubanList(this._top250entity, this._weeklyEntity);
+
+  Widget deltaWidget(int delta) {
+    if (delta > 0) {
+      return Image.asset(
+        "assets/images/ic_rank_up_xs.png",
+        width: 15,
+        height: 15,
+        color: Colors.white,
+      );
+    } else if (delta == 0) {
+      return Image.asset(
+        "assets/images/ic_rank_null_xs.png",
+        width: 15,
+        height: 15,
+        color: Colors.white,
+      );
+    } else {
+      return Image.asset(
+        "assets/images/ic_rank_down_xs.png",
+        width: 15,
+        height: 15,
+        color: Colors.white,
+      );
+    }
+  }
+
+  Widget rankTop250(int rank, String title, double average, {int delta = 0}) {
+    var text12 = TextStyle(color: Colors.white, fontSize: 12);
+    var text14 = TextStyle(color: Color(0xFFD28236), fontSize: 14);
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            "$rank.",
+            style: text12,
+          ),
+          Text(
+            "$title",
+            style: text12,
+          ),
+          Expanded(
+            child: Padding(
+              child: Text(
+                "$average",
+                style: text14,
+              ),
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            ),
+          ),
+          Padding(
+            child: deltaWidget(delta),
+            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getTop250(Top250Entity top250entity) {
+    if (top250entity != null) {
+      return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            Container(
+              width: 240,
+              child: AspectRatio(
+                aspectRatio: 270.0 / 378,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.network(
+                    top250entity.subjects[0].images.medium,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 140,
+              width: 240,
+              decoration: BoxDecoration(
+                  color: Color(0xFF4C4B3D),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5))),
+              child: Column(
+                children: <Widget>[
+                  rankTop250(1, top250entity.subjects[0].title,
+                      top250entity.subjects[0].rating.average),
+                  rankTop250(2, top250entity.subjects[1].title,
+                      top250entity.subjects[1].rating.average),
+                  rankTop250(3, top250entity.subjects[2].title,
+                      top250entity.subjects[2].rating.average),
+                  rankTop250(4, top250entity.subjects[3].title,
+                      top250entity.subjects[3].rating.average),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 100,
+              child: Text(
+                "${top250entity.title}",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 20,
+              child: Text(
+                "豆瓣榜单•共${top250entity.total}部",
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget getWeekly(WeeklyEntity weeklyEntity,{int index = 1}) {
+    if (weeklyEntity != null) {
+      return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            Container(
+              width: 240,
+              child: AspectRatio(
+                aspectRatio: 270.0 / 378,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.network(
+                    weeklyEntity.subjects[index].subject.images.medium,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 240,
+              height: 140,
+              decoration: BoxDecoration(
+                  color: Color(0xFF4C2C2E),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5))),
+              child: Column(
+                children: <Widget>[
+                  rankTop250(1, weeklyEntity.subjects[index-1+0].subject.title,
+                      weeklyEntity.subjects[index-1+0].subject.rating.average,
+                      delta: weeklyEntity.subjects[index-1+0].delta),
+                  rankTop250(2, weeklyEntity.subjects[index-1+1].subject.title,
+                      weeklyEntity.subjects[index-1+1].subject.rating.average,
+                      delta: weeklyEntity.subjects[index-1+1].delta),
+                  rankTop250(3, weeklyEntity.subjects[index-1+2].subject.title,
+                      weeklyEntity.subjects[index-1+2].subject.rating.average,
+                      delta: weeklyEntity.subjects[index-1+2].delta),
+                  rankTop250(4, weeklyEntity.subjects[index-1+3].subject.title,
+                      weeklyEntity.subjects[index-1+3].subject.rating.average,
+                      delta: weeklyEntity.subjects[index-1+3].delta),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 100,
+              child: Text(
+                "${weeklyEntity.title}",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 20,
+              child: Text(
+                "每周五更新•共${weeklyEntity.subjects.length}部",
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 280,
+      width: double.infinity,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[getWeekly(_weeklyEntity), getTop250(_top250entity),getWeekly(_weeklyEntity,index: 5)],
+      ),
     );
   }
 }

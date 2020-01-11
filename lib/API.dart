@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
 
 import 'entity_factory.dart';
 import 'oldcobbers/bean/top250_entity.dart';
+import 'oldcobbers/bean/weekly_entity.dart';
 
 typedef RequestCallBack<T> = void Function(T value);
 
@@ -66,10 +68,8 @@ class API {
   void top250(RequestCallBack requestCallBack, {count = 250}) async {
     var result = await _request.get(TOP_250 +
         '?start=0&count=$count&apikey=0b2bdeda43b5688921839c8ecb20399b');
-    var resultList = result.data['subjects'];
-//    List<Subject> list =
-//        resultList.map<Subject>((item) => Subject.fromMap(item)).toList();
-//    requestCallBack(list);
+    var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    requestCallBack(entity);
   }
 
   ///影院热映 + 即将上映
@@ -83,7 +83,12 @@ class API {
     result = await _request.get(COMING_SOON + "&count=6");
     var entity2 = EntityFactory.generateOBJ<Top250Entity>(result.data);
     var comingSoons = entity2.subjects;
-    requestCallBack({'hots': hots, 'comingSoons': comingSoons,'total':entity.total,'total2':entity2.total});
+    requestCallBack({
+      'hots': hots,
+      'comingSoons': comingSoons,
+      'total': entity.total,
+      'total2': entity2.total
+    });
   }
 
   ///影院热映 https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b
@@ -110,20 +115,16 @@ class API {
   void getHot(RequestCallBack requestCallBack) async {
     ///随机生成热门
     int start = math.Random().nextInt(220);
-    var result = await _request.get(TOP_250 + '?start=$start&count=7');
-    var resultList = result.data['subjects'];
-//    List<Subject> list =
-//        resultList.map<Subject>((item) => Subject.fromMap(item)).toList();
-//    requestCallBack(list);
+    var result = await _request.get(TOP_250 +
+        '?start=$start&count=6&apikey=0b2bdeda43b5688921839c8ecb20399b');
+    var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    requestCallBack(entity.subjects);
   }
 
   void getWeekly(RequestCallBack requestCallBack) async {
     var result = await _request.get(WEEKLY);
-    var resultList = result.data['subjects'];
-//    List<SubjectEntity> list = resultList
-//        .map<SubjectEntity>((item) => SubjectEntity.fromMap(item))
-//        .toList();
-//    requestCallBack(list);
+    var entity = EntityFactory.generateOBJ<WeeklyEntity>(result.data);
+    requestCallBack(entity);
   }
 
   ///26266893 电影条目信息
