@@ -90,13 +90,15 @@ class _OldcobbersPageState extends State<OldcobbersPage> {
                         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: Image.asset(
                           "assets/images/ic_search.png",
-                          width: 36,
-                          height: 36,
+                          width: 32,
+                          height: 32,
                         ),
                       ),
                       Expanded(
                         child: Text(
                           "这里有一张回到2000年的车票",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: Color(0xFFC2C2C2)),
                         ),
                       ),
@@ -104,8 +106,8 @@ class _OldcobbersPageState extends State<OldcobbersPage> {
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Image.asset(
                             "assets/images/ic_scan.png",
-                            width: 36,
-                            height: 36,
+                            width: 32,
+                            height: 32,
                           )),
                     ],
                   ),
@@ -115,8 +117,8 @@ class _OldcobbersPageState extends State<OldcobbersPage> {
                 padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                 child: Image.asset(
                   "assets/images/ic_mail.png",
-                  width: 36,
-                  height: 36,
+                  width: 32,
+                  height: 32,
                 ),
               )
             ],

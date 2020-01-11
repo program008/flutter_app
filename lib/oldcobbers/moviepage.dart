@@ -430,7 +430,7 @@ class TheatersHot extends StatelessWidget {
           crossAxisCount: 3,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
-          childAspectRatio: 0.6,
+          childAspectRatio: 0.5,
         ),
         itemBuilder: (context, index) {
           if (_subjects.isNotEmpty) {
@@ -526,7 +526,7 @@ class ComingSoon extends StatelessWidget {
               crossAxisCount: 3,
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
-              childAspectRatio: 0.6),
+              childAspectRatio: 0.5),
           itemBuilder: (context, index) {
             if (_subjects.isNotEmpty) {
               return movieShow(_subjects[index]);
@@ -584,6 +584,8 @@ class DoubanList extends StatelessWidget {
           Text(
             "$title",
             style: text12,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           Expanded(
             child: Padding(
