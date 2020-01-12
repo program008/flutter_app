@@ -52,6 +52,7 @@ class JsonPicPage extends StatelessWidget {
           Image(
             image: AssetImage("assets/images/icon_wan_android.png"),
             width: double.infinity,
+            height: double.infinity,
             fit: BoxFit.fill,
           ),
           Container(
