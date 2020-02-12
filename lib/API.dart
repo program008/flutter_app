@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
-
-import 'entity_factory.dart';
 import 'oldcobbers/bean/top250_entity.dart';
 import 'oldcobbers/bean/weekly_entity.dart';
 
@@ -54,7 +52,8 @@ class API {
         '?start=$start&count=3&apikey=0b2bdeda43b5688921839c8ecb20399b');
     var data = result.data;
     print("data：$data");
-    var entity = EntityFactory.generateOBJ<Top250Entity>(data);
+    //var entity = EntityFactory.generateOBJ<Top250Entity>(data);
+    var entity = Top250Entity.fromJson(data);
 
     List<Top250Subject> list = entity.subjects;
 
@@ -68,7 +67,8 @@ class API {
   void top250(RequestCallBack requestCallBack, {count = 250}) async {
     var result = await _request.get(TOP_250 +
         '?start=0&count=$count&apikey=0b2bdeda43b5688921839c8ecb20399b');
-    var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    //var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    var entity = Top250Entity.fromJson(result.data);
     requestCallBack(entity);
   }
 
@@ -76,12 +76,14 @@ class API {
   void getHotComingSoon(RequestCallBack requestCallBack) async {
     //影院热映
     var result = await _request.get(IN_THEATERS + "&count=6");
-    var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    //var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    var entity = Top250Entity.fromJson(result.data);
     var hots = entity.subjects;
 
     //即将上映
     result = await _request.get(COMING_SOON + "&count=6");
-    var entity2 = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    //var entity2 = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    var entity2 = Top250Entity.fromJson(result.data);
     var comingSoons = entity2.subjects;
     requestCallBack({
       'hots': hots,
@@ -117,13 +119,15 @@ class API {
     int start = math.Random().nextInt(220);
     var result = await _request.get(TOP_250 +
         '?start=$start&count=6&apikey=0b2bdeda43b5688921839c8ecb20399b');
-    var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    //var entity = EntityFactory.generateOBJ<Top250Entity>(result.data);
+    var entity = Top250Entity.fromJson(result.data);
     requestCallBack(entity.subjects);
   }
 
   void getWeekly(RequestCallBack requestCallBack) async {
     var result = await _request.get(WEEKLY);
-    var entity = EntityFactory.generateOBJ<WeeklyEntity>(result.data);
+    //var entity = EntityFactory.generateOBJ<WeeklyEntity>(result.data);
+    var entity = WeeklyEntity.fromJson(result.data);
     requestCallBack(entity);
   }
 
